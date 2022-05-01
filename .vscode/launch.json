@@ -144,5 +144,45 @@
             "type": "dart",
             "flutterMode": "release"
         },
+        {
+            "name": "ecommerce_app",
+            "cwd": "ecommerce_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "ecommerce_app (profile mode)",
+            "cwd": "ecommerce_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "ecommerce_app (release mode)",
+            "cwd": "ecommerce_app",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "flutter_firebase",
+            "cwd": "flutter_firebase",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_firebase (profile mode)",
+            "cwd": "flutter_firebase",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter_firebase (release mode)",
+            "cwd": "flutter_firebase",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
     ]
 }
