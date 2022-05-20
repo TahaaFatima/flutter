@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase/models/models.dart';
 import 'package:flutter_firebase/screens/login_screen.dart';
 import 'package:flutter_firebase/screens/register_screen.dart';
 import 'package:flutter_firebase/screens/upload_image_screen.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserModel userModel;
@@ -18,6 +20,73 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController fatherNameController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   List<UserModel> allUsers = [];
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  void initState() {
+    configureFCM();
+    configureLN();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  configureLN() async {
+    try {
+      flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+
+      var initializationSettingsAndroid =
+          new AndroidInitializationSettings('mipmap/ic_launcher');
+      var initializationSettingsIOS = new IOSInitializationSettings();
+      var initializationSettings = new InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsIOS);
+
+      flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: _selectNotification);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future _selectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) => new AlertDialog(
+        title: const Text('Here is your payload'),
+        content: new Text('Payload: $payload'),
+      ),
+    );
+  }
+
+  configureFCM() async {
+    try {
+      final token = await FirebaseMessaging.instance.getToken();
+      print(token);
+
+      FirebaseMessaging.onBackgroundMessage((message) async {
+        // print(message.notification.title);
+      });
+
+      FirebaseMessaging.onMessage.listen((event) {
+        print(event);
+      });
+    } catch (e) {}
+  }
+
+  Future _showNotificationWithDefaultSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'notification_channel_ID', 'channel Name',
+        importance: Importance.max, priority: Priority.high);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(0, 'New Post',
+        'How to show notifications in Flutter', platformChannelSpecifics,
+        payload: 'This is the text');
+  }
+
   Future createDocument() async {
     var queryDoc = FirebaseFirestore.instance.collection("students").doc();
     try {
@@ -195,6 +264,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(builder: (_) => UploadImageScreen()));
                 },
                 child: Text("Upload File")),
+            ElevatedButton(
+                onPressed: _showNotificationWithDefaultSound,
+                child: Text("Show notification with default sound")),
             ListView.builder(
                 shrinkWrap: true,
                 primary: false,

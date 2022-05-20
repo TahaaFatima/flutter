@@ -84,11 +84,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: passwordController,
               ),
             ),
+            /* ElevatedButton(
+                onPressed: () async {
+                  loginUser();
+                },
+                child: const Text("Login")), */
             ElevatedButton(
                 onPressed: () async {
                   loginUser();
                 },
-                child: const Text("Login"))
+                child: const Text("Google Signin")),
           ],
         ),
       )),
